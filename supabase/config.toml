@@ -1,0 +1,4 @@
+project_id = "vhmgsasnycrfgnnpjufm"
+
+[functions.analyze-city-traffic]
+verify_jwt = false
