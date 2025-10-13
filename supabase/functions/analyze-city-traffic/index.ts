@@ -21,7 +21,7 @@ serve(async (req) => {
     }
 
     const systemPrompt = `You are an expert traffic analysis AI agent for Indian cities. 
-    Your task is to analyze traffic patterns and provide detailed route recommendations.
+    Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations.
     
     For the given city, you should:
     1. Identify major traffic hotspots and congestion areas
@@ -30,11 +30,22 @@ serve(async (req) => {
     4. Include time estimates and distance for each route
     5. Give traffic status (Clear, Moderate, Heavy, Congested)
     6. Provide AI-powered insights and predictions
+    7. Analyze city population, energy usage, water supply network status
     
     Format your response as a structured JSON object with:
     {
       "city": "city name",
       "analysis": "overall traffic analysis",
+      "cityMetrics": {
+        "population": "population count with unit (e.g., 1.2M)",
+        "populationChange": "percentage change (e.g., +2.3%)",
+        "energyUsage": "energy usage with unit (e.g., 456 MW)",
+        "energyChange": "percentage change (e.g., -5.1%)",
+        "waterSupply": "water supply coverage percentage (e.g., 98%)",
+        "waterChange": "percentage change (e.g., +1.2%)",
+        "networkCoverage": "network coverage percentage (e.g., 99.9%)",
+        "networkStatus": "status (e.g., Stable)"
+      },
       "trafficFreeRoutes": [
         {
           "name": "route name",
@@ -79,7 +90,7 @@ serve(async (req) => {
           { role: 'system', content: systemPrompt },
           { 
             role: 'user', 
-            content: `Analyze traffic patterns and routes for ${city}, India. Provide detailed traffic-free routes and traffic-heavy routes with AI insights.` 
+            content: `Analyze traffic patterns, city infrastructure, population, energy usage, and water supply network for ${city}, India. Provide detailed traffic-free routes and traffic-heavy routes with AI insights and city metrics.` 
           }
         ],
       }),
@@ -124,6 +135,16 @@ serve(async (req) => {
       analysisData = {
         city: city,
         analysis: aiResponse,
+        cityMetrics: {
+          population: "N/A",
+          populationChange: "N/A",
+          energyUsage: "N/A",
+          energyChange: "N/A",
+          waterSupply: "N/A",
+          waterChange: "N/A",
+          networkCoverage: "N/A",
+          networkStatus: "N/A"
+        },
         trafficFreeRoutes: [],
         trafficRoutes: [],
         aiInsights: ['Unable to parse structured data. Please try again.'],

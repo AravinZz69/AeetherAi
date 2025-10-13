@@ -1,35 +1,48 @@
 import { Users, Zap, Droplet, Wifi } from "lucide-react";
 
-const MetricsGrid = () => {
-  const metrics = [
+interface MetricsGridProps {
+  metrics?: {
+    population: string;
+    populationChange: string;
+    energyUsage: string;
+    energyChange: string;
+    waterSupply: string;
+    waterChange: string;
+    networkCoverage: string;
+    networkStatus: string;
+  };
+}
+
+const MetricsGrid = ({ metrics }: MetricsGridProps) => {
+  const displayMetrics = [
     {
       title: "Population",
-      value: "1.2M",
-      change: "+2.3%",
+      value: metrics?.population || "N/A",
+      change: metrics?.populationChange || "N/A",
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/20"
     },
     {
       title: "Energy Usage",
-      value: "456 MW",
-      change: "-5.1%",
+      value: metrics?.energyUsage || "N/A",
+      change: metrics?.energyChange || "N/A",
       icon: Zap,
       color: "text-warning",
       bgColor: "bg-warning/20"
     },
     {
       title: "Water Supply",
-      value: "98%",
-      change: "+1.2%",
+      value: metrics?.waterSupply || "N/A",
+      change: metrics?.waterChange || "N/A",
       icon: Droplet,
       color: "text-accent",
       bgColor: "bg-accent/20"
     },
     {
       title: "Network",
-      value: "99.9%",
-      change: "Stable",
+      value: metrics?.networkCoverage || "N/A",
+      change: metrics?.networkStatus || "N/A",
       icon: Wifi,
       color: "text-success",
       bgColor: "bg-success/20"
@@ -38,7 +51,7 @@ const MetricsGrid = () => {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {metrics.map((metric, index) => (
+      {displayMetrics.map((metric, index) => (
         <div 
           key={index}
           className="glass-card rounded-xl p-4 hover:scale-105 transition-transform cursor-pointer"

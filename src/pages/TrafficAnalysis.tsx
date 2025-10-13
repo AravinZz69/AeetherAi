@@ -18,9 +18,21 @@ interface RouteData {
   alternativeRoute?: string;
 }
 
+interface CityMetrics {
+  population: string;
+  populationChange: string;
+  energyUsage: string;
+  energyChange: string;
+  waterSupply: string;
+  waterChange: string;
+  networkCoverage: string;
+  networkStatus: string;
+}
+
 interface AnalysisData {
   city: string;
   analysis: string;
+  cityMetrics: CityMetrics;
   trafficFreeRoutes: RouteData[];
   trafficRoutes: RouteData[];
   aiInsights: string[];
@@ -86,9 +98,11 @@ const TrafficAnalysis = () => {
         </header>
 
         {/* Metrics Grid */}
-        <div className="mb-6">
-          <MetricsGrid />
-        </div>
+        {analysisData && (
+          <div className="mb-6">
+            <MetricsGrid metrics={analysisData.cityMetrics} />
+          </div>
+        )}
 
         {/* Search Bar */}
         <CitySearchBar onSearch={handleCitySearch} isLoading={isLoading} />
