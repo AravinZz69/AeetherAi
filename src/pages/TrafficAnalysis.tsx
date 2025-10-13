@@ -3,9 +3,11 @@ import { Activity, Route } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import CitySearchBar from "@/components/CitySearchBar";
+import RouteSearchBar from "@/components/RouteSearchBar";
 import TrafficRouteCard from "@/components/TrafficRouteCard";
 import AIInsightsPanel from "@/components/AIInsightsPanel";
 import MetricsGrid from "@/components/MetricsGrid";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface RouteData {
   name: string;
@@ -80,6 +82,42 @@ const TrafficAnalysis = () => {
     }
   };
 
+  const handleRouteSearch = async (from: string, to: string) => {
+    setIsLoading(true);
+    setAnalysisData(null);
+
+    try {
+      console.log('Invoking analyze-city-traffic function for route:', from, 'to', to);
+      
+      const { data, error } = await supabase.functions.invoke('analyze-city-traffic', {
+        body: { from, to }
+      });
+
+      if (error) {
+        console.error('Function invocation error:', error);
+        throw error;
+      }
+
+      console.log('Function response:', data);
+
+      if (data.success && data.data) {
+        setAnalysisData(data.data);
+        toast.success(`Route analysis completed for ${from} to ${to}!`);
+      } else {
+        throw new Error(data.error || 'Failed to analyze route');
+      }
+    } catch (error) {
+      console.error('Error analyzing route:', error);
+      toast.error(
+        error instanceof Error 
+          ? error.message 
+          : 'Failed to analyze route. Please try again.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30 p-4 md:p-6 lg:p-8">
       <div className="max-w-[1600px] mx-auto">
@@ -90,8 +128,8 @@ const TrafficAnalysis = () => {
               <Activity className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-glow">AI Traffic Analysis</h1>
-              <p className="text-muted-foreground">Powered by Google Gemini - Analyze Indian city traffic patterns</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-glow">AetherAi Traffic Analysis</h1>
+              <p className="text-muted-foreground">Powered by Google Gemini - Smart route planning & traffic insights</p>
             </div>
           </div>
           <div className="h-1 w-full bg-gradient-primary rounded-full opacity-30" />
@@ -104,8 +142,19 @@ const TrafficAnalysis = () => {
           </div>
         )}
 
-        {/* Search Bar */}
-        <CitySearchBar onSearch={handleCitySearch} isLoading={isLoading} />
+        {/* Search Options */}
+        <Tabs defaultValue="city" className="mb-6">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-4">
+            <TabsTrigger value="city">City Analysis</TabsTrigger>
+            <TabsTrigger value="route">Route Analysis</TabsTrigger>
+          </TabsList>
+          <TabsContent value="city">
+            <CitySearchBar onSearch={handleCitySearch} isLoading={isLoading} />
+          </TabsContent>
+          <TabsContent value="route">
+            <RouteSearchBar onSearch={handleRouteSearch} isLoading={isLoading} />
+          </TabsContent>
+        </Tabs>
 
         {/* Loading State */}
         {isLoading && (

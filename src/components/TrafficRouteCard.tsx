@@ -1,5 +1,6 @@
-import { Route, Clock, TrendingUp, MapPin, Navigation } from "lucide-react";
+import { Route, Clock, TrendingUp, MapPin, Navigation, ExternalLink } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface RouteData {
   name: string;
@@ -18,6 +19,16 @@ interface TrafficRouteCardProps {
 }
 
 const TrafficRouteCard = ({ route, type }: TrafficRouteCardProps) => {
+  const openInGoogleMaps = () => {
+    const url = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(route.from)}&destination=${encodeURIComponent(route.to)}`;
+    window.open(url, '_blank');
+  };
+
+  const openInRapido = () => {
+    // Rapido deep link format
+    const url = `https://www.rapido.bike/ride?pickup=${encodeURIComponent(route.from)}&drop=${encodeURIComponent(route.to)}`;
+    window.open(url, '_blank');
+  };
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "clear": return "text-success bg-success/20";
@@ -71,11 +82,32 @@ const TrafficRouteCard = ({ route, type }: TrafficRouteCardProps) => {
       <p className="text-sm text-muted-foreground mb-2">{route.description}</p>
 
       {route.alternativeRoute && (
-        <div className="p-2 bg-accent/10 rounded-lg border border-accent/30">
+        <div className="p-2 bg-accent/10 rounded-lg border border-accent/30 mb-3">
           <p className="text-xs text-accent font-semibold mb-1">Alternative Route:</p>
           <p className="text-xs">{route.alternativeRoute}</p>
         </div>
       )}
+
+      <div className="flex gap-2 pt-3 border-t border-border/30">
+        <Button 
+          onClick={openInGoogleMaps}
+          size="sm"
+          variant="outline"
+          className="flex-1 text-xs"
+        >
+          <ExternalLink className="w-3 h-3 mr-1" />
+          Google Maps
+        </Button>
+        <Button 
+          onClick={openInRapido}
+          size="sm"
+          variant="outline"
+          className="flex-1 text-xs"
+        >
+          <ExternalLink className="w-3 h-3 mr-1" />
+          Rapido
+        </Button>
+      </div>
     </Card>
   );
 };

@@ -21,8 +21,8 @@ const Index = () => {
                 <Activity className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-glow">Smart City Control</h1>
-                <p className="text-muted-foreground">Real-time monitoring & AI predictions</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-glow">AetherAi</h1>
+                <p className="text-muted-foreground">AI-Powered Traffic & Route Intelligence</p>
               </div>
             </div>
             <Button 

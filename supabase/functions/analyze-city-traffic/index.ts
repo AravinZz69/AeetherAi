@@ -12,15 +12,21 @@ serve(async (req) => {
   }
 
   try {
-    const { city } = await req.json();
-    console.log('Analyzing traffic for city:', city);
+    const body = await req.json();
+    const { city, from, to } = body;
+    
+    if (from && to) {
+      console.log('Analyzing traffic for route:', from, 'to', to);
+    } else {
+      console.log('Analyzing traffic for city:', city);
+    }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are an expert traffic analysis AI agent for Indian cities. 
+    const systemPrompt = `You are an expert traffic analysis AI agent for Indian cities and routes. 
     Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations.
     
     For the given city, you should:
@@ -90,7 +96,16 @@ serve(async (req) => {
           { role: 'system', content: systemPrompt },
           { 
             role: 'user', 
-            content: `Analyze traffic patterns, city infrastructure, population, energy usage, and water supply network for ${city}, India. Provide detailed traffic-free routes and traffic-heavy routes with AI insights and city metrics.` 
+            content: from && to 
+              ? `Analyze the specific route from ${from} to ${to} in India. Provide detailed information about:
+                 1. The main route and alternative routes with current traffic conditions
+                 2. Estimated travel time and distance for each route option
+                 3. Traffic hotspots and congestion areas along the routes
+                 4. Best times to travel this route
+                 5. City metrics (population, energy, water, network) for the regions involved
+                 6. AI-powered predictions for traffic in the next few hours
+                 Make the city name "${from} to ${to}" and provide route-specific analysis.`
+              : `Analyze traffic patterns, city infrastructure, population, energy usage, and water supply network for ${city}, India. Provide detailed traffic-free routes and traffic-heavy routes with AI insights and city metrics.`
           }
         ],
       }),
