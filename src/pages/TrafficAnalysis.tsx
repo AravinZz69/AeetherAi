@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { Activity, Route } from "lucide-react";
+import { Activity, Route, ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import CitySearchBar from "@/components/CitySearchBar";
 import RouteSearchBar from "@/components/RouteSearchBar";
 import TrafficRouteCard from "@/components/TrafficRouteCard";
 import AIInsightsPanel from "@/components/AIInsightsPanel";
 import MetricsGrid from "@/components/MetricsGrid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { UserAvatar } from "@/components/UserAvatar";
 
 interface RouteData {
   name: string;
@@ -43,6 +47,7 @@ interface AnalysisData {
 }
 
 const TrafficAnalysis = () => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
 
@@ -123,13 +128,27 @@ const TrafficAnalysis = () => {
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
         <header className="mb-8">
-          <div className="flex items-center gap-4 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center glow-effect">
-              <Activity className="w-6 h-6 text-white" />
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/")}
+                className="rounded-full"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center glow-effect">
+                <Activity className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold text-glow">AetherAi Traffic Analysis</h1>
+                <p className="text-muted-foreground">Powered by Google Gemini - Smart route planning & traffic insights</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-glow">AetherAi Traffic Analysis</h1>
-              <p className="text-muted-foreground">Powered by Google Gemini - Smart route planning & traffic insights</p>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <UserAvatar />
             </div>
           </div>
           <div className="h-1 w-full bg-gradient-primary rounded-full opacity-30" />
