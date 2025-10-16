@@ -6,6 +6,8 @@ import TrafficDisplay from "@/components/TrafficDisplay";
 import WeatherWidget from "@/components/WeatherWidget";
 import PredictionPanel from "@/components/PredictionPanel";
 import MetricsGrid from "@/components/MetricsGrid";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { UserAvatar } from "@/components/UserAvatar";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -25,13 +27,17 @@ const Index = () => {
                 <p className="text-muted-foreground">AI-Powered Traffic & Route Intelligence</p>
               </div>
             </div>
-            <Button 
-              onClick={() => navigate('/traffic-analysis')}
-              className="bg-gradient-primary hover:opacity-90 flex items-center gap-2"
-            >
-              <Brain className="w-4 h-4" />
-              AI Traffic Analysis
-            </Button>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <Button 
+                onClick={() => navigate('/traffic-analysis')}
+                className="bg-gradient-primary hover:opacity-90 flex items-center gap-2"
+              >
+                <Brain className="w-4 h-4" />
+                AI Traffic Analysis
+              </Button>
+              <UserAvatar />
+            </div>
           </div>
           <div className="h-1 w-full bg-gradient-primary rounded-full opacity-30" />
         </header>
