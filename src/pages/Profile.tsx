@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface ProfileData {
@@ -106,13 +106,15 @@ const Profile = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-2xl mx-auto space-y-4 py-8">
+    <div className="min-h-screen bg-background p-4 relative overflow-hidden">
+      <div className="absolute inset-0 gradient-mesh opacity-20 pointer-events-none" />
+      
+      <div className="max-w-2xl mx-auto space-y-6 py-8 relative z-10">
         <div className="flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
-            className="gap-2"
+            className="gap-2 hover:bg-primary/10 transition-all duration-300"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Home
@@ -120,60 +122,77 @@ const Profile = () => {
           <ThemeToggle />
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile Settings</CardTitle>
-            <CardDescription>
-              Update your profile information
-            </CardDescription>
+        <Card className="glass-strong border-primary/20 shadow-xl glow-secondary">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center glow-effect">
+                <span className="text-2xl font-bold text-white">
+                  {profile.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div>
+                <CardTitle className="text-2xl">Profile Settings</CardTitle>
+                <CardDescription className="text-base">
+                  Manage your account information
+                </CardDescription>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name" className="text-sm font-medium">Name</Label>
                 <Input
                   id="name"
                   name="name"
                   type="text"
                   defaultValue={profile.name}
                   required
+                  className="glass-card border-primary/30 focus:border-primary transition-all duration-300"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className="text-sm font-medium">Email</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
                   defaultValue={profile.email}
                   disabled
-                  className="bg-muted"
+                  className="bg-muted/50 border-muted"
                 />
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Lock className="w-3 h-3" />
                   Email cannot be changed
                 </p>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="mobile">Mobile Number</Label>
+                <Label htmlFor="mobile" className="text-sm font-medium">Mobile Number</Label>
                 <Input
                   id="mobile"
                   name="mobile"
                   type="tel"
                   defaultValue={profile.mobile}
                   required
+                  className="glass-card border-primary/30 focus:border-primary transition-all duration-300"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
+                <Label htmlFor="city" className="text-sm font-medium">City</Label>
                 <Input
                   id="city"
                   name="city"
                   type="text"
                   defaultValue={profile.city}
                   required
+                  className="glass-card border-primary/30 focus:border-primary transition-all duration-300"
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={isSaving}>
+              <Button 
+                type="submit" 
+                className="w-full gradient-primary hover:opacity-90 transition-all duration-300 glow-effect" 
+                disabled={isSaving}
+              >
                 {isSaving ? "Saving..." : "Save Changes"}
               </Button>
             </form>

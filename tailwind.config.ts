@@ -72,10 +72,42 @@ export default {
             height: "0",
           },
         },
+        "quantum-rotate": {
+          "0%": {
+            transform: "rotate(0deg) scale(1)",
+          },
+          "50%": {
+            transform: "rotate(180deg) scale(1.1)",
+          },
+          "100%": {
+            transform: "rotate(360deg) scale(1)",
+          },
+        },
+        "floating": {
+          "0%, 100%": {
+            transform: "translateY(0px)",
+          },
+          "50%": {
+            transform: "translateY(-20px)",
+          },
+        },
+        "particle-float": {
+          "0%, 100%": {
+            transform: "translate(0, 0) scale(1)",
+            opacity: "0.3",
+          },
+          "50%": {
+            transform: "translate(var(--tx), var(--ty)) scale(1.5)",
+            opacity: "0.6",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "quantum-rotate": "quantum-rotate 20s linear infinite",
+        "floating": "floating 6s ease-in-out infinite",
+        "particle-float": "particle-float 8s ease-in-out infinite",
       },
     },
   },
