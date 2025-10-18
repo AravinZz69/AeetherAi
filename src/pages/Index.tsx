@@ -1,4 +1,5 @@
-import { Activity, Brain } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Activity, Brain, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import CityMap from "@/components/CityMap";
@@ -8,9 +9,17 @@ import PredictionPanel from "@/components/PredictionPanel";
 import MetricsGrid from "@/components/MetricsGrid";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserAvatar } from "@/components/UserAvatar";
+import { PreLoader } from "@/components/PreLoader";
+import { useAdminAccess } from "@/hooks/useAdminAccess";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [showPreLoader, setShowPreLoader] = useState(true);
+  const { isAdmin } = useAdminAccess();
+
+  if (showPreLoader) {
+    return <PreLoader onComplete={() => setShowPreLoader(false)} />;
+  }
 
   return (
     <div className="min-h-screen relative overflow-hidden p-4 md:p-6 lg:p-8">
@@ -18,24 +27,50 @@ const Index = () => {
       <div className="fixed inset-0 gradient-mesh opacity-20 pointer-events-none -z-10" />
       
       <div className="max-w-[1600px] mx-auto relative z-10">
+        {/* Mission Statement Hero */}
+        <div className="mb-12 text-center animate-fade-in">
+          <div className="inline-block mb-6">
+            <div className="w-20 h-20 rounded-3xl gradient-primary flex items-center justify-center glow-accent shadow-2xl floating mx-auto">
+              <Activity className="w-10 h-10 text-white" />
+            </div>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold text-glow mb-4">
+            AetherAi
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-6 max-w-3xl mx-auto">
+            Transforming Raw Traffic Data into Crystal-Clear, Actionable Business Intelligence
+          </p>
+          <p className="text-lg text-muted-foreground/80 max-w-2xl mx-auto mb-8">
+            The single source of truth for consortium members, delivering real-time insights and predictive analytics to optimize urban mobility and drive informed decision-making.
+          </p>
+          <div className="h-1 w-32 gradient-primary rounded-full shadow-lg glow-secondary mx-auto" />
+        </div>
+
         {/* Header */}
         <header className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl gradient-primary flex items-center justify-center glow-accent shadow-2xl floating">
-                <Activity className="w-7 h-7 text-white" />
-              </div>
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-glow bg-clip-text">
-                  AetherAi
-                </h1>
+                <h2 className="text-2xl md:text-3xl font-bold">
+                  Live Dashboard
+                </h2>
                 <p className="text-muted-foreground text-sm md:text-base">
-                  Next-Gen AI Traffic & Route Intelligence
+                  Real-time traffic intelligence & predictions
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <ThemeToggle />
+              {isAdmin && (
+                <Button
+                  onClick={() => navigate("/admin")}
+                  variant="outline"
+                  className="flex items-center gap-2 glass-card border-primary/30"
+                >
+                  <Shield className="w-4 h-4" />
+                  <span className="hidden sm:inline">Admin</span>
+                </Button>
+              )}
               <Button 
                 onClick={() => navigate('/traffic-analysis')}
                 className="gradient-primary hover:opacity-90 flex items-center gap-2 glow-effect transition-all duration-300 shadow-xl"

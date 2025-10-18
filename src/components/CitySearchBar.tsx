@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useActivityLogger } from "@/hooks/useActivityLogger";
 
 interface CitySearchBarProps {
   onSearch: (city: string) => void;
@@ -10,10 +11,12 @@ interface CitySearchBarProps {
 
 const CitySearchBar = ({ onSearch, isLoading }: CitySearchBarProps) => {
   const [city, setCity] = useState("");
+  const { logSearch } = useActivityLogger();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (city.trim()) {
+      logSearch("city", city.trim());
       onSearch(city.trim());
     }
   };

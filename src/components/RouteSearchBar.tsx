@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Navigation, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useActivityLogger } from "@/hooks/useActivityLogger";
 
 interface RouteSearchBarProps {
   onSearch: (from: string, to: string) => void;
@@ -11,10 +12,12 @@ interface RouteSearchBarProps {
 const RouteSearchBar = ({ onSearch, isLoading }: RouteSearchBarProps) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const { logSearch } = useActivityLogger();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (from.trim() && to.trim()) {
+      logSearch("route", `${from.trim()} to ${to.trim()}`);
       onSearch(from.trim(), to.trim());
     }
   };
