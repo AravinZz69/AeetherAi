@@ -61,16 +61,14 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-3">
               <ThemeToggle />
-              {isAdmin && (
-                <Button
-                  onClick={() => navigate("/admin")}
-                  variant="outline"
-                  className="flex items-center gap-2 glass-card border-primary/30"
-                >
-                  <Shield className="w-4 h-4" />
-                  <span className="hidden sm:inline">Admin</span>
-                </Button>
-              )}
+              <Button
+                onClick={() => navigate("/admin/login")}
+                variant="outline"
+                className="flex items-center gap-2 glass-card border-primary/30"
+              >
+                <Shield className="w-4 h-4" />
+                <span className="hidden sm:inline">Admin Portal</span>
+              </Button>
               <Button 
                 onClick={() => navigate('/traffic-analysis')}
                 className="gradient-primary hover:opacity-90 flex items-center gap-2 glow-effect transition-all duration-300 shadow-xl"
