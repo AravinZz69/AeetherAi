@@ -1,13 +1,37 @@
 import { Car, TrendingUp, TrendingDown, AlertTriangle } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
-const TrafficDisplay = () => {
-  const trafficData = [
-    { area: "Main Street", level: 75, status: "busy", trend: "up" },
-    { area: "Highway 101", level: 45, status: "moderate", trend: "down" },
-    { area: "Downtown", level: 90, status: "congested", trend: "up" },
-    { area: "Suburbs", level: 25, status: "clear", trend: "down" },
-  ];
+interface TrafficArea {
+  area: string;
+  level: number;
+  status: string;
+  trend: string;
+}
+
+interface TrafficData {
+  areas: TrafficArea[];
+  averageSpeed: string;
+  activeVehicles: string;
+}
+
+interface TrafficDisplayProps {
+  traffic?: TrafficData;
+}
+
+const TrafficDisplay = ({ traffic }: TrafficDisplayProps) => {
+  const defaultTraffic = {
+    areas: [
+      { area: "Main Street", level: 75, status: "busy", trend: "up" },
+      { area: "Highway 101", level: 45, status: "moderate", trend: "down" },
+      { area: "Downtown", level: 90, status: "congested", trend: "up" },
+      { area: "Suburbs", level: 25, status: "clear", trend: "down" },
+    ],
+    averageSpeed: "45 km/h",
+    activeVehicles: "12,456"
+  };
+
+  const currentTraffic = traffic || defaultTraffic;
+  const trafficData = currentTraffic.areas;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -73,11 +97,11 @@ const TrafficDisplay = () => {
       <div className="mt-6 p-4 bg-muted/30 rounded-lg border border-border/50">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Average Speed</span>
-          <span className="font-bold text-accent">45 km/h</span>
+          <span className="font-bold text-accent">{currentTraffic.averageSpeed}</span>
         </div>
         <div className="flex items-center justify-between text-sm mt-2">
           <span className="text-muted-foreground">Active Vehicles</span>
-          <span className="font-bold text-primary">12,456</span>
+          <span className="font-bold text-primary">{currentTraffic.activeVehicles}</span>
         </div>
       </div>
     </div>

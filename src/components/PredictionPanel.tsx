@@ -1,40 +1,82 @@
 import { Brain, TrendingUp, Zap, AlertCircle } from "lucide-react";
 import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 
-const PredictionPanel = () => {
-  const predictionData = [
-    { time: "00:00", value: 45 },
-    { time: "04:00", value: 30 },
-    { time: "08:00", value: 75 },
-    { time: "12:00", value: 85 },
-    { time: "16:00", value: 90 },
-    { time: "20:00", value: 65 },
-    { time: "24:00", value: 50 },
-  ];
+interface PredictionInsight {
+  title: string;
+  value: string;
+  status: string;
+  type: string;
+}
 
-  const predictions = [
-    {
-      title: "Traffic Peak",
-      value: "17:30 - 18:45",
-      status: "warning",
-      icon: AlertCircle,
-      color: "text-warning"
-    },
-    {
-      title: "Energy Consumption",
-      value: "+15% increase",
-      status: "info",
-      icon: Zap,
-      color: "text-accent"
-    },
-    {
-      title: "Air Quality",
-      value: "Good (AQI: 45)",
-      status: "success",
-      icon: TrendingUp,
-      color: "text-success"
+interface PredictionsData {
+  trafficForecast: Array<{ time: string; value: number }>;
+  insights: PredictionInsight[];
+  aiInsight: string;
+}
+
+interface PredictionPanelProps {
+  predictions?: PredictionsData;
+}
+
+const PredictionPanel = ({ predictions: predictionsData }: PredictionPanelProps) => {
+  const defaultPredictions = {
+    trafficForecast: [
+      { time: "00:00", value: 45 },
+      { time: "04:00", value: 30 },
+      { time: "08:00", value: 75 },
+      { time: "12:00", value: 85 },
+      { time: "16:00", value: 90 },
+      { time: "20:00", value: 65 },
+      { time: "24:00", value: 50 },
+    ],
+    insights: [
+      {
+        title: "Traffic Peak",
+        value: "17:30 - 18:45",
+        status: "warning",
+        type: "peak"
+      },
+      {
+        title: "Energy Consumption",
+        value: "+15% increase",
+        status: "info",
+        type: "energy"
+      },
+      {
+        title: "Air Quality",
+        value: "Good (AQI: 45)",
+        status: "success",
+        type: "quality"
+      }
+    ],
+    aiInsight: "Traffic congestion expected at 5:30 PM. Consider alternative routes or public transport."
+  };
+
+  const currentPredictions = predictionsData || defaultPredictions;
+  const predictionData = currentPredictions.trafficForecast;
+  
+  const getIconForType = (type: string) => {
+    switch (type) {
+      case 'peak': return AlertCircle;
+      case 'energy': return Zap;
+      default: return TrendingUp;
     }
-  ];
+  };
+
+  const getColorForStatus = (status: string) => {
+    switch (status) {
+      case 'warning': return 'text-warning';
+      case 'info': return 'text-accent';
+      case 'success': return 'text-success';
+      default: return 'text-primary';
+    }
+  };
+
+  const predictions = currentPredictions.insights.map(insight => ({
+    ...insight,
+    icon: getIconForType(insight.type),
+    color: getColorForStatus(insight.status)
+  }));
 
   return (
     <div className="glass-card rounded-xl p-6">
@@ -108,7 +150,7 @@ const PredictionPanel = () => {
           <span className="text-sm font-semibold">AI Insight</span>
         </div>
         <p className="text-xs text-muted-foreground">
-          Traffic congestion expected at 5:30 PM. Consider alternative routes or public transport.
+          {currentPredictions.aiInsight}
         </p>
       </div>
     </div>

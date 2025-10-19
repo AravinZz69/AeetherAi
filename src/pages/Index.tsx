@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Activity, Brain, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,15 +7,45 @@ import TrafficDisplay from "@/components/TrafficDisplay";
 import WeatherWidget from "@/components/WeatherWidget";
 import PredictionPanel from "@/components/PredictionPanel";
 import MetricsGrid from "@/components/MetricsGrid";
+import AccidentProneAreas from "@/components/AccidentProneAreas";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserAvatar } from "@/components/UserAvatar";
 import { PreLoader } from "@/components/PreLoader";
 import { useAdminAccess } from "@/hooks/useAdminAccess";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
   const [showPreLoader, setShowPreLoader] = useState(true);
   const { isAdmin } = useAdminAccess();
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [locationData, setLocationData] = useState<any>(null);
+
+  const handleLocationFetch = async (latitude: number, longitude: number) => {
+    setIsAnalyzing(true);
+    toast.info(`Analyzing location: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-location', {
+        body: { latitude, longitude }
+      });
+
+      if (error) throw error;
+
+      if (data?.success && data?.data) {
+        setLocationData(data.data);
+        toast.success(`Analysis complete for ${data.data.locationName}`);
+      } else {
+        throw new Error('Invalid response from analysis');
+      }
+    } catch (error: any) {
+      console.error('Error analyzing location:', error);
+      toast.error(error.message || 'Failed to analyze location');
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   if (showPreLoader) {
     return <PreLoader onComplete={() => setShowPreLoader(false)} />;
@@ -85,34 +115,43 @@ const Index = () => {
 
         {/* Metrics Grid */}
         <div className="mb-6 animate-fade-in">
-          <MetricsGrid />
+          <MetricsGrid metrics={locationData?.metrics} />
         </div>
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Map - Takes 2 columns on large screens */}
           <div className="lg:col-span-2 glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <CityMap />
+            <CityMap onLocationFetch={handleLocationFetch} isLoading={isAnalyzing} />
           </div>
           
           {/* Weather Widget */}
           <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <WeatherWidget />
+            <WeatherWidget weather={locationData?.weather} />
           </div>
         </div>
 
         {/* Bottom Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Traffic Display */}
           <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <TrafficDisplay />
+            <TrafficDisplay traffic={locationData?.traffic} />
           </div>
           
           {/* Prediction Panel */}
           <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <PredictionPanel />
+            <PredictionPanel predictions={locationData?.predictions} />
           </div>
         </div>
+
+        {/* Accident Prone Areas */}
+        {locationData?.accidentProneAreas && locationData.accidentProneAreas.length > 0 && (
+          <div className="mb-6">
+            <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+              <AccidentProneAreas areas={locationData.accidentProneAreas} />
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <footer className="mt-12 text-center">

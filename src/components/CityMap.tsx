@@ -1,6 +1,34 @@
-import { MapPin, Navigation } from "lucide-react";
+import { MapPin, Navigation, Locate } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-const CityMap = () => {
+interface CityMapProps {
+  onLocationFetch: (latitude: number, longitude: number) => void;
+  isLoading?: boolean;
+}
+
+const CityMap = ({ onLocationFetch, isLoading }: CityMapProps) => {
+  const [fetchingLocation, setFetchingLocation] = useState(false);
+
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
+    }
+
+    setFetchingLocation(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setFetchingLocation(false);
+        onLocationFetch(position.coords.latitude, position.coords.longitude);
+      },
+      (error) => {
+        setFetchingLocation(false);
+        console.error('Error getting location:', error);
+        alert('Unable to retrieve your location');
+      }
+    );
+  };
   return (
     <div className="glass-card rounded-xl p-6 h-full relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
@@ -8,7 +36,15 @@ const CityMap = () => {
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold">City Overview</h2>
-          <Navigation className="w-5 h-5 text-accent" />
+          <Button
+            onClick={handleGetLocation}
+            disabled={fetchingLocation || isLoading}
+            size="sm"
+            className="flex items-center gap-2 gradient-primary hover:opacity-90"
+          >
+            <Locate className={`w-4 h-4 ${fetchingLocation ? 'animate-spin' : ''}`} />
+            {fetchingLocation ? 'Locating...' : 'My Location'}
+          </Button>
         </div>
         
         <div className="relative h-[400px] bg-muted/30 rounded-lg overflow-hidden border border-border/50">
