@@ -122,7 +122,11 @@ const Index = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Map - Takes 2 columns on large screens */}
           <div className="lg:col-span-2 glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <CityMap onLocationFetch={handleLocationFetch} isLoading={isAnalyzing} />
+            <CityMap 
+              onLocationFetch={handleLocationFetch} 
+              isLoading={isAnalyzing}
+              locationName={locationData?.locationName}
+            />
           </div>
           
           {/* Weather Widget */}
@@ -144,14 +148,12 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Accident Prone Areas */}
-        {locationData?.accidentProneAreas && locationData.accidentProneAreas.length > 0 && (
-          <div className="mb-6">
-            <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
-              <AccidentProneAreas areas={locationData.accidentProneAreas} />
-            </div>
+        {/* Accident Prone Areas - Always visible */}
+        <div className="mb-6">
+          <div className="glass-card rounded-2xl p-1 border-primary/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <AccidentProneAreas areas={locationData?.accidentProneAreas} />
           </div>
-        )}
+        </div>
 
         {/* Footer */}
         <footer className="mt-12 text-center">

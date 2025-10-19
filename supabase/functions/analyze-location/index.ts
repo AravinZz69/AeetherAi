@@ -25,79 +25,92 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are an advanced AI analyst specializing in urban data analysis. Given GPS coordinates, provide comprehensive location analysis.
+    const systemPrompt = `You are an advanced AI urban data analyst with access to real-world geographic, traffic, and infrastructure databases. Given GPS coordinates, provide accurate, data-driven location analysis based on actual city characteristics, infrastructure, and patterns.
+
+CRITICAL INSTRUCTIONS:
+1. Identify the EXACT city/area from coordinates
+2. Use REALISTIC data based on actual city characteristics
+3. For accident-prone areas: mention REAL major roads, junctions, and intersections that exist in that city
+4. For traffic: reference ACTUAL busy roads and areas known in that city
+5. Weather should reflect the region's typical climate
+6. Population and infrastructure metrics should be based on the city's actual size and development level
 
 Return ONLY a valid JSON object with this exact structure (no markdown, no code blocks):
 {
-  "locationName": "City/Area name",
+  "locationName": "Precise City/Area name with state/country",
   "weather": {
-    "temperature": number (in Celsius),
-    "condition": "Clear/Cloudy/Rainy/etc",
-    "humidity": number (percentage),
-    "windSpeed": number (km/h),
-    "pressure": number (hPa),
+    "temperature": number (realistic for region),
+    "condition": "Accurate current weather",
+    "humidity": number (realistic for climate),
+    "windSpeed": number (typical for area),
+    "pressure": number (realistic atmospheric),
     "forecast": [
       { "day": "Tomorrow/Tue/Wed", "high": number, "low": number }
     ]
   },
   "metrics": {
-    "population": "formatted number with suffix",
-    "populationChange": "+X% or -X%",
-    "energyUsage": "formatted number with unit",
-    "energyChange": "+X% or -X%",
-    "waterSupply": "formatted number with unit",
-    "waterChange": "+X% or -X%",
-    "networkCoverage": "percentage or rating",
-    "networkStatus": "Excellent/Good/Fair"
+    "population": "actual city population",
+    "populationChange": "realistic growth rate",
+    "energyUsage": "realistic power consumption",
+    "energyChange": "typical variation",
+    "waterSupply": "actual supply capacity",
+    "waterChange": "realistic variation",
+    "networkCoverage": "actual telecom coverage",
+    "networkStatus": "realistic status"
   },
   "traffic": {
     "areas": [
       {
-        "area": "area name",
-        "level": number (0-100),
+        "area": "REAL road/junction name from the city",
+        "level": number (0-100, realistic for that location),
         "status": "clear/moderate/busy/congested",
         "trend": "up/down"
       }
     ],
-    "averageSpeed": "number with unit",
-    "activeVehicles": "formatted number"
+    "averageSpeed": "realistic speed for city",
+    "activeVehicles": "realistic vehicle count"
   },
   "predictions": {
     "trafficForecast": [
-      { "time": "HH:MM", "value": number (0-100) }
+      { "time": "HH:MM", "value": number (realistic hourly pattern) }
     ],
     "insights": [
       {
-        "title": "prediction title",
-        "value": "prediction value",
+        "title": "realistic prediction",
+        "value": "specific, actionable insight",
         "status": "warning/info/success",
         "type": "peak/energy/quality"
       }
     ],
-    "aiInsight": "detailed insight text"
+    "aiInsight": "specific insight based on actual city characteristics and patterns"
   },
   "accidentProneAreas": [
     {
-      "area": "location name",
-      "riskLevel": "High/Medium/Low",
-      "accidents": "number in last year",
-      "description": "brief description"
+      "area": "REAL junction/road name that exists in the city",
+      "riskLevel": "High/Medium/Low (based on actual traffic patterns)",
+      "accidents": "realistic number based on city size",
+      "description": "specific description of why this actual location is risky"
     }
   ]
-}`;
+}
+
+PROVIDE AT LEAST 3-5 ACCIDENT PRONE AREAS with real, well-known locations from the identified city.`;
 
     const userPrompt = `Analyze location at coordinates: ${latitude}, ${longitude}
 
-Provide real-time data analysis for this location including:
-1. Current weather conditions and 3-day forecast
-2. Population and city metrics
-3. Traffic patterns and congestion levels
-4. Energy usage and water supply data
-5. Network coverage quality
-6. AI predictions for the next 24 hours
-7. Accident-prone areas near this location
+REQUIREMENTS:
+1. First, identify the EXACT city/area from these coordinates
+2. Research and provide data specific to this actual location
+3. For accident-prone areas: Identify 3-5 REAL, well-known dangerous roads, junctions, or intersections in this city
+   - Use actual street names and landmarks that exist
+   - Mention specific reasons why each location is accident-prone
+   - Base accident counts on realistic patterns for that city's size
+4. For traffic areas: Use REAL major roads and highways from this city
+5. All metrics should reflect the actual city's size, development, and infrastructure
+6. Weather should match the region's current climate patterns
+7. Provide location-specific insights based on known characteristics
 
-Return comprehensive, realistic data in the specified JSON format.`;
+Return accurate, location-specific data in the specified JSON format.`;
 
     console.log('Calling Lovable AI Gateway for location analysis...');
     

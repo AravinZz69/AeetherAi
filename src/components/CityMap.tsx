@@ -1,13 +1,14 @@
-import { MapPin, Navigation, Locate } from "lucide-react";
+import { MapPin, Navigation, Locate, MapPinned } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 interface CityMapProps {
   onLocationFetch: (latitude: number, longitude: number) => void;
   isLoading?: boolean;
+  locationName?: string;
 }
 
-const CityMap = ({ onLocationFetch, isLoading }: CityMapProps) => {
+const CityMap = ({ onLocationFetch, isLoading, locationName }: CityMapProps) => {
   const [fetchingLocation, setFetchingLocation] = useState(false);
 
   const handleGetLocation = () => {
@@ -35,7 +36,15 @@ const CityMap = ({ onLocationFetch, isLoading }: CityMapProps) => {
       
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold">City Overview</h2>
+          <div>
+            <h2 className="text-xl font-bold">City Overview</h2>
+            {locationName && (
+              <div className="flex items-center gap-2 mt-1">
+                <MapPinned className="w-4 h-4 text-primary" />
+                <p className="text-sm text-muted-foreground">{locationName}</p>
+              </div>
+            )}
+          </div>
           <Button
             onClick={handleGetLocation}
             disabled={fetchingLocation || isLoading}
