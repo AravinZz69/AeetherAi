@@ -116,6 +116,13 @@ All colors MUST be HSL.
     @apply backdrop-blur-2xl bg-background/60 border border-border/50;
   }
   
+  /* Mobile-optimized glass cards */
+  @media (max-width: 640px) {
+    .glass-card {
+      @apply backdrop-blur-md bg-background/60 border border-border/40;
+    }
+  }
+  
   .gradient-primary {
     background: var(--gradient-primary);
   }
@@ -210,5 +217,41 @@ All colors MUST be HSL.
       transform: translate(var(--tx), var(--ty)) scale(1.5);
       opacity: 0.6;
     }
+  }
+  
+  /* Mobile-specific utilities */
+  .mobile-container {
+    @apply px-2 sm:px-4 md:px-6 lg:px-8;
+  }
+  
+  .mobile-text-responsive {
+    @apply text-sm sm:text-base md:text-lg;
+  }
+  
+  .mobile-heading-responsive {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl;
+  }
+  
+  .mobile-button-responsive {
+    @apply px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm;
+  }
+  
+  .mobile-card-spacing {
+    @apply p-3 sm:p-4 md:p-6;
+  }
+  
+  .mobile-grid-responsive {
+    @apply gap-2 sm:gap-3 md:gap-4 lg:gap-6;
+  }
+  
+  /* Prevent horizontal scroll on mobile */
+  .mobile-safe {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  /* Touch-friendly tap targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
   }
 }

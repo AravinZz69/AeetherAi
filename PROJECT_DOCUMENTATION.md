@@ -20,7 +20,7 @@
 
 ## Project Overview
 
-**AetherAi** is an advanced traffic analysis dashboard that transforms raw traffic data into crystal-clear, actionable business intelligence. It serves as the single source of truth for consortium members, delivering real-time insights and predictive analytics to optimize urban mobility.
+**AetherAi** is an advanced traffic analysis dashboard that serves as the single source of truth for consortium members, delivering real-time insights and predictive analytics to optimize urban mobility and drive informed decision-making.
 
 ### Key Capabilities
 - Real-time traffic monitoring and analysis

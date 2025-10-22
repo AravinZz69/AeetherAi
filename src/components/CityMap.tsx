@@ -31,17 +31,17 @@ const CityMap = ({ onLocationFetch, isLoading, locationName }: CityMapProps) => 
     );
   };
   return (
-    <div className="glass-card rounded-xl p-6 h-full relative overflow-hidden">
+    <div className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 h-full relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10" />
       
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-bold">City Overview</h2>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3 sm:mb-4 gap-2 sm:gap-0">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg sm:text-xl font-bold truncate">City Overview</h2>
             {locationName && (
-              <div className="flex items-center gap-2 mt-1">
-                <MapPinned className="w-4 h-4 text-primary" />
-                <p className="text-sm text-muted-foreground">{locationName}</p>
+              <div className="flex items-center gap-1 sm:gap-2 mt-1">
+                <MapPinned className="w-3 h-3 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+                <p className="text-xs sm:text-sm text-muted-foreground truncate">{locationName}</p>
               </div>
             )}
           </div>
@@ -49,14 +49,14 @@ const CityMap = ({ onLocationFetch, isLoading, locationName }: CityMapProps) => 
             onClick={handleGetLocation}
             disabled={fetchingLocation || isLoading}
             size="sm"
-            className="flex items-center gap-2 gradient-primary hover:opacity-90"
+            className="flex items-center gap-1 sm:gap-2 gradient-primary hover:opacity-90 touch-target flex-shrink-0"
           >
-            <Locate className={`w-4 h-4 ${fetchingLocation ? 'animate-spin' : ''}`} />
-            {fetchingLocation ? 'Locating...' : 'My Location'}
+            <Locate className={`w-3 h-3 sm:w-4 sm:h-4 ${fetchingLocation ? 'animate-spin' : ''}`} />
+            <span className="text-xs sm:text-sm">{fetchingLocation ? 'Locating...' : 'My Location'}</span>
           </Button>
         </div>
         
-        <div className="relative h-[400px] bg-muted/30 rounded-lg overflow-hidden border border-border/50">
+        <div className="relative h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] bg-muted/30 rounded-md sm:rounded-lg overflow-hidden border border-border/50">
           {/* Simplified map visualization */}
           <svg className="w-full h-full" viewBox="0 0 400 400">
             {/* Grid background */}
@@ -100,17 +100,17 @@ const CityMap = ({ onLocationFetch, isLoading, locationName }: CityMapProps) => 
           </div>
         </div>
         
-        <div className="flex items-center gap-4 mt-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-accent animate-pulse" />
+        <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4 mt-3 sm:mt-4 text-xs sm:text-sm flex-wrap">
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-accent animate-pulse" />
             <span className="text-muted-foreground">Normal</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-warning animate-pulse" />
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-warning animate-pulse" />
             <span className="text-muted-foreground">Busy</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-success animate-pulse" />
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-success animate-pulse" />
             <span className="text-muted-foreground">Clear</span>
           </div>
         </div>

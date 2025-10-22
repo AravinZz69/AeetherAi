@@ -50,17 +50,17 @@ const MetricsGrid = ({ metrics }: MetricsGridProps) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
       {displayMetrics.map((metric, index) => (
         <div 
           key={index}
-          className="glass-card rounded-xl p-4 hover:scale-105 transition-transform cursor-pointer"
+          className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform cursor-pointer"
         >
-          <div className="flex items-start justify-between mb-3">
-            <div className={`w-10 h-10 rounded-lg ${metric.bgColor} flex items-center justify-center`}>
-              <metric.icon className={`w-5 h-5 ${metric.color}`} />
+          <div className="flex items-start justify-between mb-2 sm:mb-3">
+            <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-md sm:rounded-lg ${metric.bgColor} flex items-center justify-center flex-shrink-0`}>
+              <metric.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${metric.color}`} />
             </div>
-            <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
+            <span className={`text-xs font-semibold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-center min-w-0 ${
               metric.change.startsWith('+') ? 'bg-success/20 text-success' : 
               metric.change.startsWith('-') ? 'bg-destructive/20 text-destructive' : 
               'bg-muted/50 text-muted-foreground'
@@ -68,8 +68,8 @@ const MetricsGrid = ({ metrics }: MetricsGridProps) => {
               {metric.change}
             </span>
           </div>
-          <p className="text-sm text-muted-foreground mb-1">{metric.title}</p>
-          <p className="text-2xl font-bold text-glow">{metric.value}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mb-1 truncate">{metric.title}</p>
+          <p className="text-lg sm:text-xl md:text-2xl font-bold text-glow truncate">{metric.value}</p>
         </div>
       ))}
     </div>
