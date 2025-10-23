@@ -59,14 +59,14 @@ const AdminDashboard = () => {
       setIsLoading(true);
 
       // Fetch activity logs
-      const { data: activities } = await supabase
+      const { data: activities } = await (supabase as any)
         .from("activity_logs")
         .select("id, user_id, action, created_at, details")
         .order("created_at", { ascending: false })
         .limit(50);
 
       // Fetch search history
-      const { data: searches } = await supabase
+      const { data: searches } = await (supabase as any)
         .from("search_history")
         .select("id, user_id, search_type, search_query, created_at")
         .order("created_at", { ascending: false })
