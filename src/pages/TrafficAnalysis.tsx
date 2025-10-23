@@ -7,15 +7,15 @@ import { Button } from "@/components/ui/button";
 import CitySearchBar from "@/components/CitySearchBar";
 import RouteSearchBar from "@/components/RouteSearchBar";
 import TrafficRouteCard from "@/components/TrafficRouteCard";
-import AIInsightsPanel from "@/components/AIInsightsPanel";
 import MetricsGrid from "@/components/MetricsGrid";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserAvatar } from "@/components/UserAvatar";
 import { TrafficKPIs } from "@/components/TrafficKPIs";
 import { TrafficHeatMap } from "@/components/TrafficHeatMap";
-import { TrafficCharts } from "@/components/TrafficCharts";
 import { TrafficSummary } from "@/components/TrafficSummary";
+import WeatherWidget from "@/components/WeatherWidget";
+import { useLiveTrafficData } from "@/hooks/useLiveTrafficData";
 
 interface RouteData {
   name: string;
@@ -62,28 +62,35 @@ interface SummaryBullet {
   text: string;
 }
 
+interface WeatherData {
+  temperature: number;
+  condition: string;
+  humidity: number;
+  windSpeed: number;
+  pressure: number;
+  forecast: Array<{ day: string; high: number; low: number }>;
+}
+
 interface AnalysisData {
   city: string;
-  analysis: string;
   dashboardKPIs: DashboardKPIs;
   heatMapData: HeatMapData;
-  peakHourData: Array<{ hour: string; congestion: number }>;
-  weeklyTrend: Array<{ day: string; avgDelay: number }>;
   vehicleComposition: Array<{ type: string; percentage: number }>;
-  incidentBreakdown: Array<{ type: string; percentage: number }>;
   summaryBullets: SummaryBullet[];
   cityMetrics: CityMetrics;
   trafficFreeRoutes: RouteData[];
   trafficRoutes: RouteData[];
-  aiInsights: string[];
-  bestTimes: string;
-  prediction: string;
+  weather?: WeatherData;
 }
 
 const TrafficAnalysis = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
+  
+  const liveData = useLiveTrafficData(
+    analysisData ? { dashboardKPIs: analysisData.dashboardKPIs, heatMapData: analysisData.heatMapData } : null
+  );
 
   const handleCitySearch = async (city: string) => {
     setIsLoading(true);
@@ -230,39 +237,48 @@ const TrafficAnalysis = () => {
             </div>
 
             {/* KPIs */}
-            {analysisData.dashboardKPIs && (
-              <TrafficKPIs data={analysisData.dashboardKPIs} />
+            {liveData?.dashboardKPIs && (
+              <TrafficKPIs data={liveData.dashboardKPIs} />
             )}
 
             {/* Heat Map */}
-            {analysisData.heatMapData && (
-              <TrafficHeatMap data={analysisData.heatMapData} />
+            {liveData?.heatMapData && (
+              <TrafficHeatMap data={liveData.heatMapData} />
             )}
 
-            {/* Charts */}
-            {analysisData.peakHourData && analysisData.weeklyTrend && 
-             analysisData.vehicleComposition && analysisData.incidentBreakdown && (
-              <TrafficCharts
-                peakHourData={analysisData.peakHourData}
-                weeklyTrend={analysisData.weeklyTrend}
-                vehicleComposition={analysisData.vehicleComposition}
-                incidentBreakdown={analysisData.incidentBreakdown}
-              />
-            )}
+            {/* Weather & Vehicle Composition Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Weather Widget */}
+              <WeatherWidget weather={analysisData.weather} />
+              
+              {/* Vehicle Composition - Single Chart */}
+              {analysisData.vehicleComposition && (
+                <div className="glass-card p-6">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Vehicle Composition</h3>
+                      <p className="text-xs text-muted-foreground">Real-time distribution by type</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    {analysisData.vehicleComposition.map((vehicle, idx) => (
+                      <div key={idx} className="bg-muted/30 rounded-lg p-4 border border-border/50">
+                        <p className="text-sm text-muted-foreground mb-1">{vehicle.type}</p>
+                        <p className="text-2xl font-bold text-glow">{vehicle.percentage}%</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Summary & Recommendations */}
             {analysisData.summaryBullets && (
               <TrafficSummary summaryBullets={analysisData.summaryBullets} />
             )}
-
-            {/* AI Insights Panel */}
-            <AIInsightsPanel
-              city={analysisData.city}
-              analysis={analysisData.analysis}
-              insights={analysisData.aiInsights}
-              bestTimes={analysisData.bestTimes}
-              prediction={analysisData.prediction}
-            />
 
             {/* Traffic-Free Routes */}
             {analysisData.trafficFreeRoutes && analysisData.trafficFreeRoutes.length > 0 && (

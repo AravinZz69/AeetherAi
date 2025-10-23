@@ -27,12 +27,11 @@ serve(async (req) => {
     }
 
     const systemPrompt = `You are an expert traffic analysis AI agent for Indian cities and routes. 
-    Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations with comprehensive visualization data.
+    Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations with live data visualization.
     
     Format your response as a structured JSON object with:
     {
       "city": "city name",
-      "analysis": "overall traffic analysis",
       "dashboardKPIs": {
         "congestionScore": number (0-10),
         "congestionTrend": "up" | "down" | "stable",
@@ -47,33 +46,11 @@ serve(async (req) => {
           {"area": "area name", "intensity": "high" | "medium" | "low", "coordinates": {"lat": number, "lng": number}}
         ]
       },
-      "peakHourData": [
-        {"hour": "6 AM", "congestion": number (0-100)},
-        {"hour": "9 AM", "congestion": number (0-100)},
-        {"hour": "12 PM", "congestion": number (0-100)},
-        {"hour": "3 PM", "congestion": number (0-100)},
-        {"hour": "6 PM", "congestion": number (0-100)},
-        {"hour": "9 PM", "congestion": number (0-100)}
-      ],
-      "weeklyTrend": [
-        {"day": "Mon", "avgDelay": number (in minutes)},
-        {"day": "Tue", "avgDelay": number},
-        {"day": "Wed", "avgDelay": number},
-        {"day": "Thu", "avgDelay": number},
-        {"day": "Fri", "avgDelay": number},
-        {"day": "Sat", "avgDelay": number},
-        {"day": "Sun", "avgDelay": number}
-      ],
       "vehicleComposition": [
         {"type": "Private Cars", "percentage": number},
         {"type": "Commercial Trucks", "percentage": number},
         {"type": "Public Transit", "percentage": number},
         {"type": "Motorcycles", "percentage": number}
-      ],
-      "incidentBreakdown": [
-        {"type": "Accidents", "percentage": number},
-        {"type": "Roadwork", "percentage": number},
-        {"type": "Other", "percentage": number}
       ],
       "summaryBullets": [
         {"icon": "emoji", "text": "summary sentence"},
@@ -89,6 +66,18 @@ serve(async (req) => {
         "waterChange": "percentage change (e.g., +1.2%)",
         "networkCoverage": "network coverage percentage (e.g., 99.9%)",
         "networkStatus": "status (e.g., Stable)"
+      },
+      "weather": {
+        "temperature": number (celsius),
+        "condition": "weather condition description",
+        "humidity": number (percentage),
+        "windSpeed": number (km/h),
+        "pressure": number (hPa),
+        "forecast": [
+          {"day": "Tomorrow", "high": number, "low": number},
+          {"day": "Day name", "high": number, "low": number},
+          {"day": "Day name", "high": number, "low": number}
+        ]
       },
       "trafficFreeRoutes": [
         {
@@ -112,17 +101,10 @@ serve(async (req) => {
           "description": "why this route has traffic",
           "alternativeRoute": "suggested alternative"
         }
-      ],
-      "aiInsights": [
-        "insight 1",
-        "insight 2",
-        "insight 3"
-      ],
-      "bestTimes": "best times to travel",
-      "prediction": "traffic prediction for next few hours"
+      ]
     }
     
-    IMPORTANT: Generate realistic data based on typical traffic patterns in Indian cities. Include proper time-based variations in peak hour data and realistic vehicle composition percentages.`;
+    IMPORTANT: Generate realistic data based on typical traffic patterns in Indian cities and current weather conditions for the location.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -189,7 +171,6 @@ serve(async (req) => {
       // If parsing fails, return a structured error with the raw response
       analysisData = {
         city: city,
-        analysis: aiResponse,
         cityMetrics: {
           population: "N/A",
           populationChange: "N/A",
@@ -202,9 +183,20 @@ serve(async (req) => {
         },
         trafficFreeRoutes: [],
         trafficRoutes: [],
-        aiInsights: ['Unable to parse structured data. Please try again.'],
-        bestTimes: 'N/A',
-        prediction: 'N/A'
+        dashboardKPIs: {
+          congestionScore: 0,
+          congestionTrend: "stable",
+          avgSpeed: 0,
+          speedTrend: "stable",
+          vehicleVolume: 0,
+          volumeTrend: "stable"
+        },
+        heatMapData: {
+          criticalIntersections: [],
+          congestionZones: []
+        },
+        vehicleComposition: [],
+        summaryBullets: []
       };
     }
 
