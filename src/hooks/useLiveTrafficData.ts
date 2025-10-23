@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
 
+interface WeatherData {
+  temperature: number;
+  condition: string;
+  humidity: number;
+  windSpeed: number;
+  pressure: number;
+  forecast: Array<{ day: string; high: number; low: number }>;
+}
+
 interface DashboardKPIs {
   congestionScore: number;
   congestionTrend: "up" | "down" | "stable";
@@ -21,6 +30,7 @@ interface HeatMapData {
 interface LiveDataState {
   dashboardKPIs: DashboardKPIs;
   heatMapData: HeatMapData;
+  weather?: WeatherData;
 }
 
 const getRandomVariation = (value: number, maxChange: number): number => {
@@ -66,6 +76,15 @@ export const useLiveTrafficData = (initialData: LiveDataState | null) => {
           intensity: Math.random() > 0.7 ? getRandomIntensity() : zone.intensity,
         }));
 
+        // Update weather data slightly
+        const updatedWeather = prev.weather ? {
+          ...prev.weather,
+          temperature: Math.round(getRandomVariation(prev.weather.temperature, 1)),
+          humidity: Math.round(Math.min(100, Math.max(0, getRandomVariation(prev.weather.humidity, 2)))),
+          windSpeed: Math.round(Math.max(0, getRandomVariation(prev.weather.windSpeed, 2))),
+          pressure: Math.round(getRandomVariation(prev.weather.pressure, 5)),
+        } : undefined;
+
         return {
           dashboardKPIs: {
             congestionScore: parseFloat(newCongestion.toFixed(1)),
@@ -79,6 +98,7 @@ export const useLiveTrafficData = (initialData: LiveDataState | null) => {
             ...prev.heatMapData,
             congestionZones: updatedZones,
           },
+          weather: updatedWeather,
         };
       });
     }, 10000);

@@ -159,6 +159,19 @@ All colors MUST be HSL.
     box-shadow: var(--glow-secondary);
   }
   
+  @keyframes pulse-border {
+    0%, 100% {
+      border-color: hsl(var(--primary) / 0.2);
+    }
+    50% {
+      border-color: hsl(var(--primary) / 0.5);
+    }
+  }
+
+  .animate-pulse-border {
+    animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  
   .quantum-flow {
     position: relative;
     overflow: hidden;

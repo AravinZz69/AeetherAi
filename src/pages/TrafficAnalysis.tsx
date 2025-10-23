@@ -89,7 +89,11 @@ const TrafficAnalysis = () => {
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   
   const liveData = useLiveTrafficData(
-    analysisData ? { dashboardKPIs: analysisData.dashboardKPIs, heatMapData: analysisData.heatMapData } : null
+    analysisData ? { 
+      dashboardKPIs: analysisData.dashboardKPIs, 
+      heatMapData: analysisData.heatMapData,
+      weather: analysisData.weather 
+    } : null
   );
 
   const handleCitySearch = async (city: string) => {
@@ -249,7 +253,7 @@ const TrafficAnalysis = () => {
             {/* Weather & Vehicle Composition Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Weather Widget */}
-              <WeatherWidget weather={analysisData.weather} />
+              <WeatherWidget weather={liveData?.weather || analysisData.weather} />
               
               {/* Vehicle Composition - Single Chart */}
               {analysisData.vehicleComposition && (
