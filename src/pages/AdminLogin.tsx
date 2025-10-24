@@ -28,7 +28,7 @@ const AdminLogin = () => {
   const checkAdminAndRedirect = async () => {
     if (!user) return;
 
-    const { data } = await (supabase as any)
+    const { data } = await supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", user.id)
@@ -61,7 +61,7 @@ const AdminLogin = () => {
 
       if (data.user) {
         // Check if user has admin role
-        const { data: roleData } = await (supabase as any)
+        const { data: roleData } = await supabase
           .from("user_roles")
           .select("role")
           .eq("user_id", data.user.id)

@@ -1,5 +1,4 @@
 import { Cloud, Droplets, Wind, Sun, Thermometer } from "lucide-react";
-import { AnimatedNumber } from "./AnimatedNumber";
 
 interface WeatherData {
   temperature: number;
@@ -30,14 +29,8 @@ const WeatherWidget = ({ weather }: WeatherWidgetProps) => {
 
   const currentWeather = weather || defaultWeather;
   return (
-    <div className="glass-card rounded-xl p-6 relative overflow-hidden border-2 border-primary/20 animate-pulse-border">
+    <div className="glass-card rounded-xl p-6 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-accent/20 to-primary/20 rounded-full blur-3xl" />
-      <div className="absolute top-2 right-2">
-        <span className="flex h-3 w-3">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-          <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
-        </span>
-      </div>
       
       <div className="relative z-10">
         <div className="flex items-center gap-3 mb-6">
@@ -53,57 +46,37 @@ const WeatherWidget = ({ weather }: WeatherWidgetProps) => {
         <div className="flex items-center justify-between mb-6">
           <div>
             <div className="flex items-center gap-2">
-              <Thermometer className="w-8 h-8 text-primary animate-pulse" />
-              <AnimatedNumber 
-                value={currentWeather.temperature} 
-                decimals={0}
-                suffix="°"
-                className="text-5xl font-bold text-glow"
-              />
+              <Thermometer className="w-8 h-8 text-primary" />
+              <span className="text-5xl font-bold text-glow">{currentWeather.temperature}°</span>
             </div>
             <p className="text-muted-foreground mt-2">{currentWeather.condition}</p>
           </div>
-          <Sun className="w-16 h-16 text-warning opacity-80 animate-pulse" />
+          <Sun className="w-16 h-16 text-warning opacity-80" />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-muted/30 rounded-lg p-3 border border-border/50 transition-all duration-300 hover:border-accent/50">
+          <div className="bg-muted/30 rounded-lg p-3 border border-border/50">
             <div className="flex items-center gap-2 mb-1">
-              <Droplets className="w-4 h-4 text-accent animate-pulse" />
+              <Droplets className="w-4 h-4 text-accent" />
               <span className="text-xs text-muted-foreground">Humidity</span>
             </div>
-            <AnimatedNumber 
-              value={currentWeather.humidity} 
-              decimals={0}
-              suffix="%"
-              className="text-lg font-bold"
-            />
+            <p className="text-lg font-bold">{currentWeather.humidity}%</p>
           </div>
           
-          <div className="bg-muted/30 rounded-lg p-3 border border-border/50 transition-all duration-300 hover:border-primary/50">
+          <div className="bg-muted/30 rounded-lg p-3 border border-border/50">
             <div className="flex items-center gap-2 mb-1">
-              <Wind className="w-4 h-4 text-primary animate-pulse" />
+              <Wind className="w-4 h-4 text-primary" />
               <span className="text-xs text-muted-foreground">Wind</span>
             </div>
-            <AnimatedNumber 
-              value={currentWeather.windSpeed} 
-              decimals={0}
-              suffix=" km/h"
-              className="text-lg font-bold"
-            />
+            <p className="text-lg font-bold">{currentWeather.windSpeed} km/h</p>
           </div>
           
-          <div className="bg-muted/30 rounded-lg p-3 border border-border/50 transition-all duration-300 hover:border-secondary/50">
+          <div className="bg-muted/30 rounded-lg p-3 border border-border/50">
             <div className="flex items-center gap-2 mb-1">
-              <Cloud className="w-4 h-4 text-secondary animate-pulse" />
+              <Cloud className="w-4 h-4 text-secondary" />
               <span className="text-xs text-muted-foreground">Pressure</span>
             </div>
-            <AnimatedNumber 
-              value={currentWeather.pressure} 
-              decimals={0}
-              suffix=" hPa"
-              className="text-lg font-bold"
-            />
+            <p className="text-lg font-bold">{currentWeather.pressure} hPa</p>
           </div>
         </div>
 

@@ -8,7 +8,7 @@ export const useActivityLogger = () => {
     if (!user) return;
 
     try {
-      await (supabase as any).from("activity_logs").insert({
+      await supabase.from("activity_logs").insert({
         user_id: user.id,
         action,
         details,
@@ -22,7 +22,7 @@ export const useActivityLogger = () => {
     if (!user) return;
 
     try {
-      await (supabase as any).from("search_history").insert({
+      await supabase.from("search_history").insert({
         user_id: user.id,
         search_type: searchType,
         search_query: searchQuery,

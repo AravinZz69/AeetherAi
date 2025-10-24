@@ -10,8 +10,9 @@ import Index from "./pages/Index";
 import TrafficAnalysis from "./pages/TrafficAnalysis";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -25,17 +26,14 @@ const App = () => (
           <BrowserRouter>
             <AuthProvider>
               <Routes>
-                {/* Public routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/traffic-analysis" element={<TrafficAnalysis />} />
                 <Route path="/auth" element={<Auth />} />
-
-                {/* Protected routes */}
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/traffic-analysis" element={<TrafficAnalysis />} />
-                  <Route path="/profile" element={<Profile />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Route>
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </AuthProvider>
           </BrowserRouter>
