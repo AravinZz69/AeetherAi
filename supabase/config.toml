@@ -1,1 +1,7 @@
-project_id = "badsnomfmmltptdqleef"
+project_id = "vhmgsasnycrfgnnpjufm"
+
+[functions.analyze-city-traffic]
+verify_jwt = false
+
+[functions.analyze-location]
+verify_jwt = false

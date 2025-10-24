@@ -39,7 +39,7 @@ const Profile = () => {
   const fetchProfile = async () => {
     if (!user) return;
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("user_id", user.id)
@@ -64,7 +64,7 @@ const Profile = () => {
     setIsSaving(true);
     const formData = new FormData(e.currentTarget);
 
-    const { error } = await (supabase as any)
+    const { error } = await supabase
       .from("profiles")
       .update({
         name: formData.get("name") as string,

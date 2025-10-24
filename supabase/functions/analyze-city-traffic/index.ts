@@ -27,36 +27,21 @@ serve(async (req) => {
     }
 
     const systemPrompt = `You are an expert traffic analysis AI agent for Indian cities and routes. 
-    Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations with live data visualization.
+    Your task is to analyze traffic patterns, city infrastructure, and provide detailed route recommendations.
+    
+    For the given city, you should:
+    1. Identify major traffic hotspots and congestion areas
+    2. Suggest traffic-free or low-traffic routes
+    3. Provide alternative routes that typically have heavy traffic
+    4. Include time estimates and distance for each route
+    5. Give traffic status (Clear, Moderate, Heavy, Congested)
+    6. Provide AI-powered insights and predictions
+    7. Analyze city population, energy usage, water supply network status
     
     Format your response as a structured JSON object with:
     {
       "city": "city name",
-      "dashboardKPIs": {
-        "congestionScore": number (0-10),
-        "congestionTrend": "up" | "down" | "stable",
-        "avgSpeed": number (in km/h),
-        "speedTrend": "up" | "down" | "stable",
-        "vehicleVolume": number (total vehicles),
-        "volumeTrend": "up" | "down" | "stable"
-      },
-      "heatMapData": {
-        "criticalIntersections": ["intersection 1", "intersection 2"],
-        "congestionZones": [
-          {"area": "area name", "intensity": "high" | "medium" | "low", "coordinates": {"lat": number, "lng": number}}
-        ]
-      },
-      "vehicleComposition": [
-        {"type": "Private Cars", "percentage": number},
-        {"type": "Commercial Trucks", "percentage": number},
-        {"type": "Public Transit", "percentage": number},
-        {"type": "Motorcycles", "percentage": number}
-      ],
-      "summaryBullets": [
-        {"icon": "emoji", "text": "summary sentence"},
-        {"icon": "emoji", "text": "biggest problem"},
-        {"icon": "emoji", "text": "action recommendation"}
-      ],
+      "analysis": "overall traffic analysis",
       "cityMetrics": {
         "population": "population count with unit (e.g., 1.2M)",
         "populationChange": "percentage change (e.g., +2.3%)",
@@ -66,18 +51,6 @@ serve(async (req) => {
         "waterChange": "percentage change (e.g., +1.2%)",
         "networkCoverage": "network coverage percentage (e.g., 99.9%)",
         "networkStatus": "status (e.g., Stable)"
-      },
-      "weather": {
-        "temperature": number (celsius),
-        "condition": "weather condition description",
-        "humidity": number (percentage),
-        "windSpeed": number (km/h),
-        "pressure": number (hPa),
-        "forecast": [
-          {"day": "Tomorrow", "high": number, "low": number},
-          {"day": "Day name", "high": number, "low": number},
-          {"day": "Day name", "high": number, "low": number}
-        ]
       },
       "trafficFreeRoutes": [
         {
@@ -101,10 +74,15 @@ serve(async (req) => {
           "description": "why this route has traffic",
           "alternativeRoute": "suggested alternative"
         }
-      ]
-    }
-    
-    IMPORTANT: Generate realistic data based on typical traffic patterns in Indian cities and current weather conditions for the location.`;
+      ],
+      "aiInsights": [
+        "insight 1",
+        "insight 2",
+        "insight 3"
+      ],
+      "bestTimes": "best times to travel",
+      "prediction": "traffic prediction for next few hours"
+    }`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -171,6 +149,7 @@ serve(async (req) => {
       // If parsing fails, return a structured error with the raw response
       analysisData = {
         city: city,
+        analysis: aiResponse,
         cityMetrics: {
           population: "N/A",
           populationChange: "N/A",
@@ -183,20 +162,9 @@ serve(async (req) => {
         },
         trafficFreeRoutes: [],
         trafficRoutes: [],
-        dashboardKPIs: {
-          congestionScore: 0,
-          congestionTrend: "stable",
-          avgSpeed: 0,
-          speedTrend: "stable",
-          vehicleVolume: 0,
-          volumeTrend: "stable"
-        },
-        heatMapData: {
-          criticalIntersections: [],
-          congestionZones: []
-        },
-        vehicleComposition: [],
-        summaryBullets: []
+        aiInsights: ['Unable to parse structured data. Please try again.'],
+        bestTimes: 'N/A',
+        prediction: 'N/A'
       };
     }
 
