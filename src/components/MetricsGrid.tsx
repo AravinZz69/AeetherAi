@@ -11,9 +11,11 @@ interface MetricsGridProps {
     networkCoverage: string;
     networkStatus: string;
   };
+  // When true, hide potentially sensitive infrastructure metrics (population, energy, water)
+  hideSensitive?: boolean;
 }
 
-const MetricsGrid = ({ metrics }: MetricsGridProps) => {
+const MetricsGrid = ({ metrics, hideSensitive }: MetricsGridProps) => {
   const displayMetrics = [
     {
       title: "Population",
@@ -48,10 +50,14 @@ const MetricsGrid = ({ metrics }: MetricsGridProps) => {
       bgColor: "bg-success/20"
     }
   ];
+  // If hideSensitive is true, filter out the sensitive metrics by title
+  const filtered = hideSensitive
+    ? displayMetrics.filter(m => !["Population", "Energy Usage", "Water Supply"].includes(m.title))
+    : displayMetrics;
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4">
-      {displayMetrics.map((metric, index) => (
+    <div className={`grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-${Math.min(4, filtered.length)} gap-2 sm:gap-3 md:gap-4`}>
+      {filtered.map((metric, index) => (
         <div 
           key={index}
           className="glass-card rounded-lg sm:rounded-xl p-3 sm:p-4 hover:scale-105 transition-transform cursor-pointer"

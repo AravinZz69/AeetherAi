@@ -86,6 +86,7 @@ interface AnalysisData {
 const TrafficAnalysis = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'city' | 'route'>('city');
   const [analysisData, setAnalysisData] = useState<AnalysisData | null>(null);
   
   const liveData = useLiveTrafficData(
@@ -202,12 +203,12 @@ const TrafficAnalysis = () => {
         {/* Metrics Grid */}
         {analysisData && (
           <div className="mb-6">
-            <MetricsGrid metrics={analysisData.cityMetrics} />
+            <MetricsGrid metrics={analysisData.cityMetrics} hideSensitive={selectedTab === 'route'} />
           </div>
         )}
 
         {/* Search Options */}
-        <Tabs defaultValue="city" className="mb-4 sm:mb-6">
+  <Tabs value={selectedTab} onValueChange={(v) => setSelectedTab(v as 'city' | 'route')} defaultValue="city" className="mb-4 sm:mb-6">
           <TabsList className="grid w-full max-w-sm sm:max-w-md mx-auto grid-cols-2 mb-3 sm:mb-4 h-9 sm:h-10">
             <TabsTrigger value="city" className="text-xs sm:text-sm">City Analysis</TabsTrigger>
             <TabsTrigger value="route" className="text-xs sm:text-sm">Route Analysis</TabsTrigger>
@@ -296,7 +297,9 @@ const TrafficAnalysis = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {analysisData.trafficFreeRoutes.map((route, index) => (
-                    <TrafficRouteCard key={index} route={route} type="traffic-free" />
+                    <div key={index}>
+                      <TrafficRouteCard route={route} type="traffic-free" />
+                    </div>
                   ))}
                 </div>
               </div>
@@ -314,7 +317,9 @@ const TrafficAnalysis = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                   {analysisData.trafficRoutes.map((route, index) => (
-                    <TrafficRouteCard key={index} route={route} type="traffic" />
+                    <div key={index}>
+                      <TrafficRouteCard route={route} type="traffic" />
+                    </div>
                   ))}
                 </div>
               </div>

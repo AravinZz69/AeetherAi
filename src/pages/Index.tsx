@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Activity, Brain, Shield } from "lucide-react";
+import { Activity, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import CityMap from "@/components/CityMap";
@@ -11,14 +11,14 @@ import AccidentProneAreas from "@/components/AccidentProneAreas";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { UserAvatar } from "@/components/UserAvatar";
 import { PreLoader } from "@/components/PreLoader";
-import { useAdminAccess } from "@/hooks/useAdminAccess";
+// admin access button removed per request
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const Index = () => {
   const navigate = useNavigate();
   const [showPreLoader, setShowPreLoader] = useState(true);
-  const { isAdmin } = useAdminAccess();
+  // admin access hidden
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [locationData, setLocationData] = useState<any>(null);
 
@@ -88,16 +88,7 @@ const Index = () => {
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto overflow-x-auto">
               <ThemeToggle />
-              <Button
-                onClick={() => navigate("/admin/login")}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-1 sm:gap-2 glass-card border-primary/30 whitespace-nowrap"
-              >
-                <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline text-xs sm:text-sm">Admin Portal</span>
-                <span className="sm:hidden text-xs">Admin</span>
-              </Button>
+              {/* Admin Portal button hidden */}
               <Button 
                 onClick={() => navigate('/traffic-analysis')}
                 size="sm"
