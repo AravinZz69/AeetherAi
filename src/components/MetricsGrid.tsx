@@ -50,9 +50,9 @@ const MetricsGrid = ({ metrics, hideSensitive }: MetricsGridProps) => {
       bgColor: "bg-success/20"
     }
   ];
-  // If hideSensitive is true, filter out the sensitive metrics by title
+  // If hideSensitive is true, filter out all sensitive infrastructure metrics
   const filtered = hideSensitive
-    ? displayMetrics.filter(m => !["Population", "Energy Usage", "Water Supply"].includes(m.title))
+    ? displayMetrics.filter(m => !["Population", "Energy Usage", "Water Supply", "Network"].includes(m.title))
     : displayMetrics;
 
   return (

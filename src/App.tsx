@@ -10,8 +10,6 @@ import Index from "./pages/Index";
 import TrafficAnalysis from "./pages/TrafficAnalysis";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 
@@ -29,14 +27,12 @@ const App = () => (
               <Routes>
                 {/* Public routes */}
                 <Route path="/auth" element={<Auth />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
 
                 {/* Protected routes */}
                 <Route element={<ProtectedRoute />}>
                   <Route path="/" element={<Index />} />
                   <Route path="/traffic-analysis" element={<TrafficAnalysis />} />
                   <Route path="/profile" element={<Profile />} />
-                  <Route path="/admin" element={<AdminDashboard />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Route>

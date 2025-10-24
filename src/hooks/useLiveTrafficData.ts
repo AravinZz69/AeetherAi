@@ -101,7 +101,7 @@ export const useLiveTrafficData = (initialData: LiveDataState | null) => {
           weather: updatedWeather,
         };
       });
-    }, 10000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [initialData]);
